@@ -277,7 +277,7 @@ public class Controller {
 		
 		for(SerialPortListener listener : serialPortListeners)
 			if(status == SERIAL_CONNECTION_OPENED)
-				listener.connectionOpened(Model.sampleRate, Model.packet, Model.portName, Model.baudRate);
+				listener.connectionOpened(Model.sampleRate, Model.packet, Model.portName, Model.baudRate, port.getOutputStream());
 			else if(status == SERIAL_CONNECTION_CLOSED)
 				listener.connectionClosed();
 			else if(status == SERIAL_CONNECTION_LOST)

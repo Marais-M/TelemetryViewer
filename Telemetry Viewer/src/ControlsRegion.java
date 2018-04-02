@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.OutputStream;
 import java.net.URI;
 
 import javax.swing.Box;
@@ -39,6 +40,8 @@ public class ControlsRegion extends JPanel {
 	JComboBox<String> portNamesCombobox;
 	JComboBox<Integer> baudRatesCombobox;
 	JButton connectButton;
+	
+	ConsoleTransmitter transmitter;
 	
 	/**
 	 * Creates the panel of controls and registers their event handlers.
@@ -213,7 +216,7 @@ public class ControlsRegion extends JPanel {
 		
 		Controller.addSerialPortListener(new SerialPortListener() {
 			
-			@Override public void connectionOpened(int sampleRate, Packet packet, String portName, int baudRate) {
+			@Override public void connectionOpened(int sampleRate, Packet packet, String portName, int baudRate, OutputStream outputStream) {
 				
 				// enable or disable UI elements
 				openLayoutButton.setEnabled(true);
@@ -239,6 +242,8 @@ public class ControlsRegion extends JPanel {
 					}
 				connectButton.setText("Disconnect");
 				
+				transmitter = new ConsoleTransmitter(outputStream);
+				transmitter.start();	
 			}
 			
 			@Override public void connectionClosed() {
@@ -259,6 +264,7 @@ public class ControlsRegion extends JPanel {
 				if(packetTypeCombobox.getSelectedIndex() < 0)
 					packetTypeCombobox.setSelectedIndex(0);
 				
+				transmitter.interrupt();
 			}
 
 			@Override public void connectionLost() {
@@ -269,6 +275,7 @@ public class ControlsRegion extends JPanel {
 				JFrame parentWindow = (JFrame) SwingUtilities.windowForComponent(ControlsRegion.this);
 				JOptionPane.showMessageDialog(parentWindow, "Warning: Serial connection lost.", "Warning", JOptionPane.WARNING_MESSAGE);
 				
+				transmitter.interrupt();
 			}
 		});
 		

@@ -4,6 +4,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.io.OutputStream;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -539,7 +540,7 @@ public class OpenGLChartsRegion extends JPanel {
 		
 		// track if a serial port is connected
 		Controller.addSerialPortListener(new SerialPortListener() {
-			@Override public void connectionOpened(int sampleRate, Packet packet, String portName, int baudRate) {
+			@Override public void connectionOpened(int sampleRate, Packet packet, String portName, int baudRate, OutputStream outputStream) {
 				serialPortConnected = true;
 			}
 			
